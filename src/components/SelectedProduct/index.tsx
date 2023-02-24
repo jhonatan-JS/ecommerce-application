@@ -1,8 +1,7 @@
 import { Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
-
 import { AiOutlineClose } from "react-icons/ai";
 
-interface CartProductProps {
+interface ISelectedProductProps {
   product: {
     id: number;
     name: string;
@@ -18,12 +17,12 @@ interface CartProductProps {
   handleDrecrement: (product: any) => void;
 }
 
-export default function CartProduct({
+const SelectedProduct = ({
   product,
   handleDeleProduct,
   handleIncrement,
   handleDrecrement,
-}: CartProductProps) {
+}: ISelectedProductProps) => {
   return (
     <Flex
       key={product.id}
@@ -52,9 +51,10 @@ export default function CartProduct({
         X
       </Icon>
 
-      <Flex align="center" gap={2} direction={["column", "row", "row"]}>
+      <Flex align="center" gap={2} direction={["column"]}>
         <Image src={product.photo} w={["80px", "100px"]} alt={product.name} />
         <Text
+          color="black"
           fontSize={["16px", "13px"]}
           fontWeight="400"
           w={["100%", "100px"]}
@@ -72,7 +72,13 @@ export default function CartProduct({
           position="relative"
           gap={2}
         >
-          <Text fontSize="6px" position="absolute" top="-10px" left="1px">
+          <Text
+            color="black"
+            fontSize="6px"
+            position="absolute"
+            top="-10px"
+            left="1px"
+          >
             Qtd:
           </Text>
           <Flex
@@ -88,7 +94,7 @@ export default function CartProduct({
             >
               -
             </Button>
-            <Text w="15px" textAlign="center">
+            <Text color="black" w="15px" textAlign="center">
               {product.quantity}
             </Text>
             <Button
@@ -101,7 +107,7 @@ export default function CartProduct({
           </Flex>
         </Flex>
         <Flex>
-          <Text fontWeight="bold">
+          <Text color="black" fontWeight="bold">
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
               currency: "BRL",
@@ -111,4 +117,6 @@ export default function CartProduct({
       </Flex>
     </Flex>
   );
-}
+};
+
+export default SelectedProduct;

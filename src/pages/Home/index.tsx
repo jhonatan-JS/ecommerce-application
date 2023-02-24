@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import { Box, Flex, Grid, Spinner, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
 
 import { useAppDispatch } from "../../store/hooks";
-import { addProductCart } from "../../store/actions";
+import { addProductCart } from "../../store/cartSlice";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import ProductCard from "../../components/ProductCard";
-
+import Products from "../../components/Products";
 import { getProducts } from "../../services/getProducts";
 
-interface ProductProps {
+interface IProductProps {
   id: number;
   name: string;
   brand: string;
@@ -22,14 +21,12 @@ interface ProductProps {
 }
 
 const Home = () => {
-  const [data, setData] = useState<ProductProps[]>([]);
+  const [data, setData] = useState<IProductProps[]>([]);
 
   const getProductsData = async () => {
     const response = await getProducts();
     setData(response);
   };
-
-  console.log(data);
 
   const dispatch = useAppDispatch();
 
@@ -37,7 +34,7 @@ const Home = () => {
     getProductsData();
   }, []);
 
-  const handleAddToCart = (product: ProductProps) => {
+  const handleAddToCart = (product: IProductProps) => {
     try {
       dispatch(addProductCart(product));
 
@@ -70,7 +67,7 @@ const Home = () => {
         >
           {data ? (
             data.map((product) => (
-              <ProductCard
+              <Products
                 key={product.id}
                 product={product}
                 handleAddToCart={handleAddToCart}

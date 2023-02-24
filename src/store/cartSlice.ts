@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface Product {
+interface IProduct {
   id: number;
+  _id: number;
   name: string;
   brand: string;
   description: string;
@@ -12,7 +13,7 @@ interface Product {
 }
 
 interface CartState {
-  cart: Product[];
+  cart: IProduct[];
   totalPrice: number;
   itemsQuantity: number;
 }
@@ -27,11 +28,11 @@ if (typeof window !== "undefined") {
   }
 }
 
-const total = cartItems?.reduce((acc: number, item: Product) => {
+const total = cartItems?.reduce((acc: number, item: IProduct) => {
   return acc + item.price * item.quantity;
 }, 0);
 
-const itemsQuantity = cartItems?.reduce((acc: number, item: Product) => {
+const itemsQuantity = cartItems?.reduce((acc: number, item: IProduct) => {
   return acc + item.quantity;
 }, 0);
 
@@ -49,8 +50,9 @@ export const cartSlice = createSlice({
       try {
         const product = action.payload;
         const productIndex = state.cart.findIndex(
-          (item) => item.id === product.id
+          (item) => item._id === product._id
         );
+
         if (productIndex >= 0) {
           state.cart[productIndex].quantity += 1;
         } else {
@@ -80,7 +82,7 @@ export const cartSlice = createSlice({
       try {
         const product = action.payload;
         const productIndex = state.cart.findIndex(
-          (item) => item.id === product.id
+          (item) => item._id === product._id
         );
 
         if (productIndex >= 0) {
@@ -110,7 +112,7 @@ export const cartSlice = createSlice({
       try {
         const product = action.payload;
         const productIndex = state.cart.findIndex(
-          (item) => item.id === product.id
+          (item) => item._id === product._id
         );
 
         if (productIndex >= 0) {
@@ -155,7 +157,7 @@ export const cartSlice = createSlice({
       try {
         const product = action.payload;
         const productIndex = state.cart.findIndex(
-          (item) => item.id === product.id
+          (item) => item._id === product._id
         );
 
         if (productIndex >= 0) {

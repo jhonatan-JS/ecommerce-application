@@ -25,10 +25,16 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     outline: 0;
     box-sizing: border-box;
+
+    font-size: 14.40px;
   }
 
   body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
     color: ${colors.white};
+    background-color: #E5E5E5;
     -webkit-font-smoothing: antialiased;
     background-color: ${colors.backgroundInput};
   }
@@ -41,6 +47,7 @@ export const GlobalStyle = createGlobalStyle`
 
   h1, h2, h3, h4, h5, h6, strong {
     font-weight: 500;
+
     color: ${colors.black};
   }
 

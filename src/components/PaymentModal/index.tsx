@@ -1,12 +1,12 @@
 import {
   Button,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   Flex,
   Grid,
   Text,
@@ -18,19 +18,18 @@ import {
   decrementProductCart,
   deleteProductCart,
   incrementProductCart,
-} from "../../store/actions";
-import { colors } from "../../styles/global";
+} from "../../store/cartSlice";
 
 import { toast } from "react-toastify";
-import CartProduct from "../CartProduct";
+import SelectedProduct from "../SelectedProduct";
 
-interface CartModalProps {
+interface IPaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpen: () => void;
 }
 
-interface ProductProps {
+interface IProductProps {
   id: number;
   name: string;
   brand: string;
@@ -41,19 +40,20 @@ interface ProductProps {
   quantity: number;
 }
 
-export default function CartModal({ isOpen, onClose }: CartModalProps) {
+const PaymentModal = ({ isOpen, onClose }: IPaymentModalProps) => {
   const { cart, totalPrice } = useAppSelector((state) => state.cart);
+
   const dispatch = useAppDispatch();
 
-  const handleIncrement = (product: ProductProps) => {
+  const handleIncrement = (product: IProductProps) => {
     dispatch(incrementProductCart(product));
   };
 
-  const handleDrecrement = (product: ProductProps) => {
+  const handleDrecrement = (product: IProductProps) => {
     dispatch(decrementProductCart(product));
   };
 
-  const handleDeleProduct = (product: ProductProps) => {
+  const handleDeleProduct = (product: IProductProps) => {
     dispatch(deleteProductCart(product));
   };
 
@@ -77,27 +77,22 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
 
   return (
     <>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={onClose}
-        size={["xs", "sm", "md"]}
-      >
-        <DrawerOverlay bg="transparent" />
-        <DrawerContent bg={`${colors.primary}`} shadow="2xl">
+      <Modal isOpen={isOpen} onClose={onClose} size={["xs", "sm", "md"]}>
+        <ModalOverlay bg="transparent" />
+        <ModalContent bg="#02735E" shadow="2xl" mt={32}>
           <Grid
             alignItems="center"
             justifyItems="space-between"
             templateColumns="2fr 1fr"
             p={2}
           >
-            <DrawerHeader color="#fff" fontSize="27px" lineHeight="33px" mt={4}>
+            <ModalHeader color="#fff" fontSize="27px" lineHeight="33px" mt={4}>
               Carrinho
-              <Text fontSize="27px" lineHeight="33px">
+              <Text color="#fff" fontSize="27px" lineHeight="33px">
                 de Compras
               </Text>
-            </DrawerHeader>
-            <DrawerCloseButton
+            </ModalHeader>
+            <ModalCloseButton
               display="flex"
               color="#fff"
               position="initial"
@@ -105,9 +100,9 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             />
           </Grid>
 
-          <DrawerBody display="flex" flexDirection="column" alignItems="center">
-            {cart.map((product: ProductProps) => (
-              <CartProduct
+          <ModalBody display="flex" flexDirection="column" alignItems="center">
+            {cart.map((product: IProductProps) => (
+              <SelectedProduct
                 key={product.id}
                 product={product}
                 handleIncrement={handleIncrement}
@@ -115,9 +110,9 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                 handleDeleProduct={handleDeleProduct}
               />
             ))}
-          </DrawerBody>
+          </ModalBody>
 
-          <DrawerFooter flexDirection="column">
+          <ModalFooter flexDirection="column">
             <Button colorScheme="red" onClick={handleClearCart}>
               Limpar Carrinho
             </Button>
@@ -146,9 +141,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
             >
               Finalizar Compra
             </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
-}
+};
+
+export default PaymentModal;

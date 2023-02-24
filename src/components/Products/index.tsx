@@ -1,7 +1,6 @@
 import { Button, Card, Flex, Image, Img, Text } from "@chakra-ui/react";
-import { colors } from "../../styles/global";
 
-interface ProductCardProps {
+interface IProductCardProps {
   product: {
     id: number;
     name: string;
@@ -14,7 +13,7 @@ interface ProductCardProps {
   handleAddToCart: (product: any) => void;
 }
 
-const ProductCard = ({ product, handleAddToCart }: ProductCardProps) => {
+const ProductCard = ({ product, handleAddToCart }: IProductCardProps) => {
   return (
     <Card key={product.id} color="black" textAlign="left">
       <Flex
@@ -90,7 +89,7 @@ const ProductCard = ({ product, handleAddToCart }: ProductCardProps) => {
         alignItems="center"
       >
         <Image src="shopping-bag.svg" alt="Carrinho" width="15px" mr="14px" />
-        <Text>COMPRAR</Text>
+        <Text>Adicionar ao carrinho</Text>
       </Button>
     </Card>
   );

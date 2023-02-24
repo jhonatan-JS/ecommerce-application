@@ -1,9 +1,9 @@
-import CartModal from "../CartModal";
+import PaymentModal from "../PaymentModal";
 import { colors } from "../../styles/global";
 import { useAppSelector } from "../../store/hooks";
 import { Flex, Text, Image, useDisclosure } from "@chakra-ui/react";
 
-export default function Cart() {
+const Cart = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { itemsQuantity } = useAppSelector((state) => state.cart);
@@ -27,7 +27,9 @@ export default function Cart() {
         {itemsQuantity}
       </Text>
 
-      <CartModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
+      <PaymentModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
     </Flex>
   );
-}
+};
+
+export default Cart;
