@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
-import { Box, Flex, Grid, Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  Spinner,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 import { useAppDispatch } from "../../store/hooks";
 import { addProductCart } from "../../store/cartSlice";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { colors } from "../../styles/global";
 
 import Products from "../../components/Products";
 import { getProducts } from "../../services/getProducts";
-
+import NewProduct from "../../components/NewProduct";
 interface IProductProps {
   id: number;
   name: string;
@@ -22,6 +30,7 @@ interface IProductProps {
 
 const Home = () => {
   const [data, setData] = useState<IProductProps[]>([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getProductsData = async () => {
     const response = await getProducts();
@@ -82,7 +91,19 @@ const Home = () => {
             />
           )}
         </Grid>
+        <Flex h={"80vh"}>
+          <Button
+            size="lg"
+            ml={"auto"}
+            bg={`${colors.primary}`}
+            colorScheme="teal"
+            onClick={onOpen}
+          >
+            New Product
+          </Button>
+        </Flex>
       </Box>
+      <NewProduct isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
     </Flex>
   );
 };

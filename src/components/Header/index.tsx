@@ -29,7 +29,7 @@ export default function Header() {
         align="center"
         justify="space-between"
       >
-        <Avatar src="https://bit.ly/broken-link" />
+        {route === "/home" && <Avatar src="https://bit.ly/broken-link" />}
       </Flex>
 
       {route === "/home" && <Cart />}

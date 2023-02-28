@@ -1,4 +1,5 @@
 import styled, { createGlobalStyle } from "styled-components";
+import "react-circular-progressbar/dist/styles.css";
 
 export const colors = {
   primary: "#014040",
@@ -25,7 +26,7 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     outline: 0;
     box-sizing: border-box;
-
+    font-family: Ubuntu;
     font-size: 14.40px;
   }
 
