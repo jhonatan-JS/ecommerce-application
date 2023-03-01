@@ -14,15 +14,15 @@ import {
   Input,
 } from "@chakra-ui/react";
 
+import { useForm } from "react-hook-form";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { DropContainer } from "./styles";
 import { api } from "../../services/api";
 import { colors } from "../../styles/global";
 
-import Dropzone from "react-dropzone";
-import { useState, useCallback } from "react";
+import { useState } from "react";
 
 interface INewProductProps {
   isOpen: boolean;
@@ -30,56 +30,75 @@ interface INewProductProps {
   onOpen: () => void;
 }
 
+interface CreateProductFormData {
+  name: string;
+  description: string;
+  brand: string;
+  price: string;
+  image: string;
+}
+
+const createProductFormSchema = yup.object().shape({
+  name: yup.string().required("Informe o nome"),
+  description: yup.string().required("Informe a descrição"),
+  brand: yup.string().required("Informe a marca"),
+  price: yup.string().required("Informe o preço"),
+  image: yup.string().notRequired(),
+});
+
 const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
-  const renderDragMessage = (isDragActive: any, isDragReject: any) => {
-    if (!isDragActive) {
-      return <p>Drop your file here</p>;
-    }
-    if (isDragReject) {
-      return <p>File not accepted, sorry</p>;
-    }
-    return <p>Drop the file here</p>;
+  const { register, handleSubmit } = useForm<CreateProductFormData>({
+    resolver: yupResolver(createProductFormSchema),
+  });
+
+  const [file, setFile] = useState<any>(null);
+
+  const handleFileChange = (e: any) => {
+    setFile(e.target.files[0]);
   };
 
-  const handleUpload = useCallback(async (file: any) => {
-    const fileData = file[0];
+  const handleCreateProduct = async (data: any) => {
+    const formData = new FormData();
 
-    let formData = new FormData();
-    formData.append("name", "mouse");
-    formData.append("description", "Criados pela Apple Ligam e se conectam");
-    formData.append("brand", "Apple");
-    formData.append("image", fileData);
-    formData.append("price", "123");
+    formData.append("name", data.name);
+    formData.append("description", data.name);
+    formData.append("brand", data.brand);
+    formData.append("image", file);
+    formData.append("price", data.price);
+    console.log(file);
 
-    const payload = {
-      name: "mouse",
-      description: "Criados pela Apple Ligam e se conectam",
-      brand: "Apple",
-      image: fileData,
-      price: "123",
-    };
-
-    const response = await api.post("/product", payload, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-
-    console.log(response);
-  }, []);
-
-  const handleCreate = useCallback((event: any) => {
-    const { id, value } = event.target;
-
-    console.log(id, value);
-  }, []);
+    try {
+      await api.post("/product", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: {
+          name: formData.get("name"),
+          description: formData.get("description"),
+          brand: formData.get("brand"),
+          image: file,
+          price: formData.get("price"),
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} size={["xs", "sm", "md"]}>
         <ModalOverlay bg="transparent" />
-        <ModalContent bg="#02735E" shadow="2xl" mt={32}>
+        <ModalContent
+          bg="#02735E"
+          shadow="2xl"
+          mt={32}
+          as="form"
+          onSubmit={handleSubmit(
+            async (values) => await handleCreateProduct(values)
+          )}
+        >
           <Grid
             alignItems="center"
             justifyItems="space-between"
@@ -99,12 +118,7 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
             />
           </Grid>
 
-          <ModalBody
-            onChange={handleCreate}
-            display="flex"
-            flexDirection="column"
-            alignItems="start"
-          >
+          <ModalBody display="flex" flexDirection="column" alignItems="start">
             <FormControl id="name" mt={"10px"} isRequired>
               <FormLabel color={`${colors.white}`}>Name</FormLabel>
               <Input
@@ -112,6 +126,7 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
                 size="md"
                 textColor={`${colors.black}`}
                 type="text"
+                {...register("name")}
               />
             </FormControl>
 
@@ -122,6 +137,7 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
                 size="md"
                 textColor={`${colors.black}`}
                 type="text"
+                {...register("description")}
               />
             </FormControl>
 
@@ -132,6 +148,7 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
                 size="md"
                 textColor={`${colors.black}`}
                 type="text"
+                {...register("brand")}
               />
             </FormControl>
 
@@ -142,35 +159,19 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
                 size="md"
                 textColor={`${colors.black}`}
                 type="number"
+                {...register("price")}
               />
             </FormControl>
 
             <FormControl w={"auto"} id="img" mt={"10px"} isRequired>
               <FormLabel color={`${colors.white}`}>Carregar imagem</FormLabel>
-              <Dropzone onDrop={(acceptedFiles) => handleUpload(acceptedFiles)}>
-                {({
-                  getRootProps,
-                  getInputProps,
-                  isDragActive,
-                  isDragReject,
-                }) => (
-                  <section>
-                    <DropContainer
-                      {...getRootProps()}
-                      isDragActive={isDragActive}
-                      isDragReject={isDragReject}
-                    >
-                      <input {...getInputProps()} />
-                      {renderDragMessage(isDragActive, isDragReject)}
-                    </DropContainer>
-                  </section>
-                )}
-              </Dropzone>
+              <input type="file" onChange={handleFileChange} />
             </FormControl>
           </ModalBody>
 
           <ModalFooter flexDirection="column">
             <Button
+              type="submit"
               bg="black"
               color="#fff"
               w="50%"
@@ -180,7 +181,6 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
                 bg: "gray.300",
                 color: "black",
               }}
-              onClick={handleCreate}
             >
               Enviar
             </Button>
