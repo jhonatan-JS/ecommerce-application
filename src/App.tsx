@@ -4,7 +4,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-
+import UserProvider from "../src/contexts/user";
 import { GlobalStyle } from "./styles/global";
 import Header from "./components/Header";
 
@@ -12,11 +12,13 @@ const App = () => {
   return (
     <ChakraProvider>
       <Provider store={store}>
-        <Router>
-          <Header />
-          <Routes />
-          <GlobalStyle />
-        </Router>
+        <UserProvider>
+          <Router>
+            <Header />
+            <Routes />
+            <GlobalStyle />
+          </Router>
+        </UserProvider>
       </Provider>
     </ChakraProvider>
   );

@@ -15,13 +15,10 @@ import {
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { api } from "../../services/api";
 import { colors } from "../../styles/global";
-
 import { useState } from "react";
 
 interface INewProductProps {
@@ -51,6 +48,7 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
     resolver: yupResolver(createProductFormSchema),
   });
 
+  const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
   const [file, setFile] = useState<any>(null);
 
   const handleFileChange = (e: any) => {
@@ -65,24 +63,16 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
     formData.append("brand", data.brand);
     formData.append("image", file);
     formData.append("price", data.price);
-    console.log(file);
 
     try {
-      await api.post("/product", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: {
-          name: formData.get("name"),
-          description: formData.get("description"),
-          brand: formData.get("brand"),
-          image: file,
-          price: formData.get("price"),
-        },
+      await fetch(`${REACT_APP_API_URL}/product`, {
+        method: "POST",
+        body: formData,
       });
+      onClose();
+      window.location.reload();
     } catch (e) {
-      console.log(e);
+      console.log("Erro:", e);
     }
   };
 

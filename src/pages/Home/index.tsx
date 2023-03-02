@@ -19,13 +19,12 @@ import Products from "../../components/Products";
 import { getProducts } from "../../services/getProducts";
 import NewProduct from "../../components/NewProduct";
 interface IProductProps {
-  id: number;
+  _id: string;
   name: string;
   brand: string;
   description: string;
-  photo: string;
+  image: string;
   price: number;
-  updatedAt: string;
 }
 
 const Home = () => {
@@ -77,7 +76,7 @@ const Home = () => {
           {data ? (
             data.map((product) => (
               <Products
-                key={product.id}
+                key={product._id}
                 product={product}
                 handleAddToCart={handleAddToCart}
               />

@@ -3,13 +3,12 @@ import { AiOutlineClose } from "react-icons/ai";
 
 interface ISelectedProductProps {
   product: {
-    id: number;
+    _id: string;
     name: string;
     brand: string;
     description: string;
-    photo: string;
+    image: string;
     price: number;
-    updatedAt: string;
     quantity: number;
   };
   handleDeleProduct: (product: any) => void;
@@ -25,7 +24,7 @@ const SelectedProduct = ({
 }: ISelectedProductProps) => {
   return (
     <Flex
-      key={product.id}
+      key={product._id}
       bg="#fff"
       p={4}
       borderRadius="8px"
@@ -52,7 +51,7 @@ const SelectedProduct = ({
       </Icon>
 
       <Flex align="center" gap={2} direction={["column"]}>
-        <Image src={product.photo} w={["80px", "100px"]} alt={product.name} />
+        <Image src={product.image} w={["80px", "100px"]} alt={product.name} />
         <Text
           color="black"
           fontSize={["16px", "13px"]}

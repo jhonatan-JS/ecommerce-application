@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { Input, Text, Container, Button, Flex } from "@chakra-ui/react";
 import { colors } from "../../styles/global";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
+import { api } from "../../services/api";
 
 import { FormControl, FormLabel } from "@chakra-ui/react";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmation, setConfirmation] = useState("");
 
   const handleMailChange = (e: any) => {
     setEmail(e.target.value);
@@ -16,8 +23,78 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  console.log("email: ", email);
-  console.log("password: ", password);
+  const handlePasswordConfirmationChange = (e: any) => {
+    setConfirmation(e.target.value);
+  };
+
+  const handleCreate = async () => {
+    if (!email || !password || !confirmation) {
+      toast({
+        title: "Oopss..",
+        description: "Preencha todos os campos.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (password !== confirmation) {
+      toast({
+        title: "Oopss..",
+        description: "As senhas não conferem.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Oopss..",
+        description: "A senha deve ter no mínimo 6 caracteres.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!email.includes("@")) {
+      toast({
+        title: "Oopss..",
+        description: "Email inválido.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+    try {
+      await api.post("/user", {
+        email,
+        password,
+      });
+
+      toast({
+        title: "Sucesso",
+        description: "Usuário cadastrado com sucesso.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      navigate("/");
+    } catch (e) {
+      toast({
+        title: "Oopss..",
+        description: "Email já cadastrado.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Container
@@ -37,6 +114,7 @@ const Login = () => {
           bg={"white"}
           size="md"
           type="email"
+          color={`${colors.black}`}
           onChange={handleMailChange}
         />
       </FormControl>
@@ -44,9 +122,11 @@ const Login = () => {
       <FormControl mt={"10px"}>
         <FormLabel color={`${colors.white}`}>Password</FormLabel>
         <Input
+          required
           bg={"white"}
           size="md"
           type="password"
+          color={`${colors.black}`}
           onChange={handlePasswordChange}
         />
       </FormControl>
@@ -56,13 +136,19 @@ const Login = () => {
         <Input
           bg={"white"}
           size="md"
-          type="Confirm"
-          onChange={handlePasswordChange}
+          type="password"
+          color={`${colors.black}`}
+          onChange={handlePasswordConfirmationChange}
         />
       </FormControl>
 
       <Flex align={"end"} mt={"25px"} direction={"column"}>
-        <Button colorScheme="teal" size="lg" bg={`${colors.primary}`}>
+        <Button
+          onClick={handleCreate}
+          colorScheme="teal"
+          size="lg"
+          bg={`${colors.primary}`}
+        >
           Enviar
         </Button>
       </Flex>

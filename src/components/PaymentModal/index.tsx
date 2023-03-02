@@ -30,13 +30,12 @@ interface IPaymentModalProps {
 }
 
 interface IProductProps {
-  id: number;
+  _id: string;
   name: string;
   brand: string;
   description: string;
-  photo: string;
+  image: string;
   price: number;
-  updatedAt: string;
   quantity: number;
 }
 
@@ -103,7 +102,7 @@ const PaymentModal = ({ isOpen, onClose }: IPaymentModalProps) => {
           <ModalBody display="flex" flexDirection="column" alignItems="center">
             {cart.map((product: IProductProps) => (
               <SelectedProduct
-                key={product.id}
+                key={product._id}
                 product={product}
                 handleIncrement={handleIncrement}
                 handleDrecrement={handleDrecrement}
