@@ -33,7 +33,7 @@ const Login = () => {
         title: "Oopss..",
         description: "Preencha todos os campos.",
         status: "error",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       return;
@@ -44,7 +44,7 @@ const Login = () => {
         title: "Oopss..",
         description: "As senhas não conferem.",
         status: "error",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       return;
@@ -55,7 +55,7 @@ const Login = () => {
         title: "Oopss..",
         description: "A senha deve ter no mínimo 6 caracteres.",
         status: "error",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       return;
@@ -66,7 +66,7 @@ const Login = () => {
         title: "Oopss..",
         description: "Email inválido.",
         status: "error",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       return;
@@ -81,7 +81,7 @@ const Login = () => {
         title: "Sucesso",
         description: "Usuário cadastrado com sucesso.",
         status: "success",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       navigate("/");
@@ -90,7 +90,7 @@ const Login = () => {
         title: "Oopss..",
         description: "Email já cadastrado.",
         status: "error",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     }

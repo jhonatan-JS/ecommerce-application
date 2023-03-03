@@ -106,7 +106,7 @@ const ProductCard = ({ product, handleAddToCart }: IProductCardProps) => {
       Toast({
         title: "Produto editado com sucesso",
         status: "success",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     } catch (e) {
@@ -130,7 +130,7 @@ const ProductCard = ({ product, handleAddToCart }: IProductCardProps) => {
           title: "Erro ao deletar produto",
           description: "Tente novamente",
           status: "error",
-          duration: 9000,
+          duration: 2000,
           isClosable: true,
         });
       }

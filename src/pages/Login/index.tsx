@@ -14,8 +14,6 @@ const Login = () => {
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loged, setLoged] = useState(false);
-  const [users, setUsers] = useState<any>();
   const { setUserId } = useContext(UserContext);
   const handleMailChange = (e: any) => {
     setEmail(e.target.value);
@@ -27,43 +25,26 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await api.get("/user", {
+      const response = await api.post("/user/login", {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
+        data: {
+          email,
+          password,
+        },
       });
-
-      setUsers(response.data);
-
-      users.map((userCurrent: any) => {
-        if (userCurrent.email === email && userCurrent.password === password) {
-          navigate("/home");
-          setLoged(true);
-          setUserId(userCurrent._id);
-        }
-      });
-
-      setLoged(false);
-      if (loged) {
-        toast({
-          title: "Oopss..",
-          description: "Email ou senha incorretos.",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Oopss..",
-          description: "Usuario não encontrado, tente novamente.",
-          status: "warning",
-          duration: 9000,
-          isClosable: true,
-        });
-      }
+      navigate("/home");
+      setUserId(response.data._id);
     } catch (e) {
-      console.log(e);
+      toast({
+        title: "Oopss..",
+        description: "Email ou senha invalidos.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
   return (

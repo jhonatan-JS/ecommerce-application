@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import Cart from "../Cart";
 import { colors } from "../../styles/global";
 import { Avatar } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { AiOutlineLogout } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,17 @@ import {
   Input,
   Flex,
   Container,
+} from "@chakra-ui/react";
+
+import {
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from "@chakra-ui/react";
 
 export default function Header() {
@@ -57,13 +68,11 @@ export default function Header() {
           title: "Oopss..",
           description: "As senhas não conferem.",
           status: "error",
-          duration: 9000,
+          duration: 2000,
           isClosable: true,
         });
         return;
       }
-
-      console.log(userId);
 
       await api.put(`/user/${userId}`, {
         headers: {
@@ -71,16 +80,16 @@ export default function Header() {
           "Content-Type": "application/json",
         },
         data: {
-          email: email,
-          password: password,
+          email,
+          password,
         },
       });
 
       onClose();
       toast({
-        title: "Usuario editado com sucesso",
+        title: "Alteração concluida",
         status: "success",
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     } catch (e) {
@@ -103,12 +112,18 @@ export default function Header() {
 
       if (response.status === 200) {
         navigate("/");
+        toast({
+          title: "Usuario deletado",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
       } else {
         toast({
           title: "Erro ao deletar usuario",
           description: "Tente novamente",
           status: "error",
-          duration: 9000,
+          duration: 2000,
           isClosable: true,
         });
       }
@@ -139,31 +154,57 @@ export default function Header() {
           <div style={{ display: "flex" }}>
             {route === "/home" ? (
               <>
-                <Avatar src="https://bit.ly/broken-link" />
-                <EditIcon
-                  cursor={"pointer"}
-                  onClick={() => {
-                    openModal();
-                  }}
-                  style={{ marginLeft: 12, marginTop: 4 }}
-                  boxSize={8}
-                />
-                <DeleteIcon
-                  cursor={"pointer"}
-                  onClick={() => {
-                    deletUser();
-                  }}
-                  style={{ marginLeft: 12, marginTop: 4 }}
-                  boxSize={8}
-                />
-                <AiOutlineLogout
-                  cursor={"pointer"}
-                  onClick={() => {
-                    navigate("/");
-                  }}
-                  style={{ marginLeft: 12, marginTop: 4 }}
-                  size={34}
-                />
+                <Menu>
+                  <MenuButton
+                    bg="#02735E"
+                    as={Button}
+                    colorScheme={`${colors.primary}`}
+                    rightIcon={<ChevronDownIcon />}
+                  >
+                    User
+                  </MenuButton>
+                  <MenuList bg="#02735E">
+                    <MenuItem bg="#02735E" justifyContent={"space-between"}>
+                      <Flex ml={6} cursor="default">
+                        <Text fontSize={22}>Edit user</Text>
+                      </Flex>
+                      <EditIcon
+                        cursor={"pointer"}
+                        onClick={() => {
+                          openModal();
+                        }}
+                        style={{ marginLeft: 12, marginTop: 4 }}
+                        boxSize={8}
+                      />
+                    </MenuItem>
+                    <MenuItem bg="#02735E" justifyContent={"space-between"}>
+                      <Flex ml={6} cursor="default">
+                        <Text fontSize={22}>Delete user</Text>
+                      </Flex>
+                      <DeleteIcon
+                        cursor={"pointer"}
+                        onClick={() => {
+                          deletUser();
+                        }}
+                        style={{ marginLeft: 12, marginTop: 4 }}
+                        boxSize={8}
+                      />
+                    </MenuItem>
+                    <MenuItem bg="#02735E" justifyContent={"space-between"}>
+                      <Flex ml={6} cursor="default">
+                        <Text fontSize={22}>Logout</Text>
+                      </Flex>
+                      <AiOutlineLogout
+                        cursor={"pointer"}
+                        onClick={() => {
+                          navigate("/");
+                        }}
+                        style={{ marginLeft: 12, marginTop: 4 }}
+                        size={34}
+                      />
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
               </>
             ) : null}
           </div>
