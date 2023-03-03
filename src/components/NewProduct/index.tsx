@@ -17,9 +17,10 @@ import {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import { Spinner } from "@chakra-ui/react";
 import { colors } from "../../styles/global";
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 
 interface INewProductProps {
   isOpen: boolean;
@@ -50,6 +51,8 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
 
   const REACT_APP_API_URL = process.env.REACT_APP_API_URL;
   const [file, setFile] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
   const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);
@@ -65,14 +68,23 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
     formData.append("price", data.price);
 
     try {
+      setLoading(true);
       await fetch(`${REACT_APP_API_URL}/product`, {
         method: "POST",
         body: formData,
       });
       onClose();
       window.location.reload();
+      setLoading(false);
     } catch (e) {
-      console.log("Erro:", e);
+      toast({
+        title: "Oopss..",
+        description: "Ocorreu um erro ao cadastrar o produto.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setLoading(false);
     }
   };
 
@@ -172,7 +184,7 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
                 color: "black",
               }}
             >
-              Enviar
+              {loading ? <Spinner color="white" /> : "Enviar"}
             </Button>
           </ModalFooter>
         </ModalContent>

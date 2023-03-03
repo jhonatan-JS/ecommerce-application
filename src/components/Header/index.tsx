@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import Cart from "../Cart";
 import { colors } from "../../styles/global";
-import { Avatar } from "@chakra-ui/react";
 import { ChevronDownIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { AiOutlineLogout } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/user";
 import { useDisclosure, useToast } from "@chakra-ui/react";
 import { api } from "../../services/api";
+import { Spinner } from "@chakra-ui/react";
 
 import {
   Button,
@@ -26,16 +26,7 @@ import {
   Container,
 } from "@chakra-ui/react";
 
-import {
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
-} from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 export default function Header() {
   const location = useLocation();
@@ -44,6 +35,7 @@ export default function Header() {
   const { userId } = useContext(UserContext);
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,6 +54,7 @@ export default function Header() {
   };
 
   const handeUpdateUser = async () => {
+    setLoading(true);
     try {
       if (password !== confirmation) {
         toast({
@@ -92,8 +85,17 @@ export default function Header() {
         duration: 2000,
         isClosable: true,
       });
+      setLoading(false);
     } catch (e) {
       console.log(e);
+      toast({
+        title: "Oopss..",
+        description: "Erro ao alterar usuario.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+      setLoading(false);
     }
   };
 
@@ -277,7 +279,7 @@ export default function Header() {
                 size="lg"
                 bg={`${colors.primary}`}
               >
-                Enviar
+                {loading ? <Spinner color="white" /> : "Enviar"}
               </Button>
             </Flex>
           </Container>

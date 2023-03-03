@@ -6,7 +6,7 @@ import { api } from "../../services/api";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-
+import { Spinner } from "@chakra-ui/react";
 import { UserContext } from "../../contexts/user";
 
 const Login = () => {
@@ -15,6 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setUserId } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
   const handleMailChange = (e: any) => {
     setEmail(e.target.value);
   };
@@ -24,6 +25,7 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const response = await api.post("/user/login", {
         headers: {
@@ -37,6 +39,7 @@ const Login = () => {
       });
       navigate("/home");
       setUserId(response.data._id);
+      setLoading(false);
     } catch (e) {
       toast({
         title: "Oopss..",
@@ -45,6 +48,7 @@ const Login = () => {
         duration: 2000,
         isClosable: true,
       });
+      setLoading(false);
     }
   };
   return (
@@ -89,7 +93,7 @@ const Login = () => {
             size="lg"
             bg={`${colors.primary}`}
           >
-            Enviar
+            {loading ? <Spinner color="white" /> : "Enviar"}
           </Button>
 
           <Text mt={6}>

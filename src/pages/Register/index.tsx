@@ -4,7 +4,7 @@ import { colors } from "../../styles/global";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 import { api } from "../../services/api";
-
+import { Spinner } from "@chakra-ui/react";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 
 const Login = () => {
@@ -14,6 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleMailChange = (e: any) => {
     setEmail(e.target.value);
@@ -72,6 +73,8 @@ const Login = () => {
       return;
     }
     try {
+      setLoading(true);
+
       await api.post("/user", {
         email,
         password,
@@ -85,6 +88,7 @@ const Login = () => {
         isClosable: true,
       });
       navigate("/");
+      setLoading(false);
     } catch (e) {
       toast({
         title: "Oopss..",
@@ -93,6 +97,7 @@ const Login = () => {
         duration: 2000,
         isClosable: true,
       });
+      setLoading(false);
     }
   };
 
@@ -149,7 +154,7 @@ const Login = () => {
           size="lg"
           bg={`${colors.primary}`}
         >
-          Enviar
+          {loading ? <Spinner color="white" /> : "Enviar"}
         </Button>
       </Flex>
     </Container>
