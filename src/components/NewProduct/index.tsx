@@ -67,8 +67,8 @@ const NewProduct = ({ isOpen, onClose }: INewProductProps) => {
     formData.append("image", file);
     formData.append("price", data.price);
 
+    setLoading(true);
     try {
-      setLoading(true);
       await fetch(`${REACT_APP_API_URL}/product`, {
         method: "POST",
         body: formData,

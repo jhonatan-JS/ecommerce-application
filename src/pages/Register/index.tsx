@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Input, Text, Container, Button, Flex } from "@chakra-ui/react";
 import { colors } from "../../styles/global";
 import { useNavigate } from "react-router-dom";
+import { Link } from "@chakra-ui/react";
+
 import { useToast } from "@chakra-ui/react";
 import { api } from "../../services/api";
 import { Spinner } from "@chakra-ui/react";
@@ -147,6 +149,12 @@ const Login = () => {
         />
       </FormControl>
 
+      <Text mt={6}>
+        Voltar ao login {""}
+        <Link color="teal.500" href="/">
+          Click aqui.
+        </Link>
+      </Text>
       <Flex align={"end"} mt={"25px"} direction={"column"}>
         <Button
           onClick={handleCreate}
